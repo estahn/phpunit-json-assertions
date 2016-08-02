@@ -12,6 +12,7 @@
 namespace EnricoStahn\JsonAssert;
 
 use JsonSchema\RefResolver;
+use JsonSchema\Uri\UriResolver;
 use JsonSchema\Uri\UriRetriever;
 use JsonSchema\Validator;
 
@@ -36,16 +37,13 @@ trait Assert
      */
     public static function assertJsonMatchesSchema($schema, $content)
     {
-        $retriever = new UriRetriever();
-        $schema = $retriever->retrieve('file://'.realpath($schema));
-
         // Assume references are relative to the current file
         // Create an issue or pull request if you need more complex use cases
-        $refResolver = new RefResolver($retriever);
-        $refResolver->resolve($schema, $schema->id);
+        $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
+        $schemaObj = $refResolver->resolve('file://' . realpath($schema));
 
         $validator = new Validator();
-        $validator->check($content, $schema);
+        $validator->check($content, $schemaObj);
 
         $message = '- Property: %s, Contraint: %s, Message: %s';
         $messages = array_map(function ($exception) use ($message) {
