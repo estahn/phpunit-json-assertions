@@ -40,7 +40,7 @@ trait Assert
         // Assume references are relative to the current file
         // Create an issue or pull request if you need more complex use cases
         $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
-        $schemaObj = $refResolver->resolve('file://' . realpath($schema));
+        $schemaObj = $refResolver->resolve('file://'.realpath($schema));
 
         $validator = new Validator();
         $validator->check($content, $schemaObj);
