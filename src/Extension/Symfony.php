@@ -69,12 +69,12 @@ trait Symfony
      */
     public static function assertJsonResponse(Response $response, $statusCode = 200)
     {
-        \PHPUnit_Framework_Assert::assertEquals(
+        \PHPUnit\Framework\Assert::assertEquals(
             $statusCode,
             $response->getStatusCode(),
             $response->getContent()
         );
-        \PHPUnit_Framework_Assert::assertTrue(
+        \PHPUnit\Framework\Assert::assertTrue(
             $response->headers->contains('Content-Type', 'application/json'),
             $response->headers
         );

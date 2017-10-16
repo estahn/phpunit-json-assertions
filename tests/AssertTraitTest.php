@@ -11,7 +11,10 @@
 
 namespace EnricoStahn\JsonAssert\Tests;
 
-class AssertTraitTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\ExpectationFailedException;
+use PHPUnit\Framework\TestCase;
+
+class AssertTraitTest extends TestCase
 {
     /**
      * Showcase for the Wiki.
@@ -33,7 +36,7 @@ class AssertTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedException \PHPUnit\Framework\ExpectationFailedException
      */
     public function testAssertJsonMatchesSchemaFail()
     {
@@ -50,12 +53,12 @@ class AssertTraitTest extends \PHPUnit_Framework_TestCase
 
         try {
             AssertTraitImpl::assertJsonMatchesSchema(Utils::getSchemaPath('test.schema.json'), $content);
-        } catch (\PHPUnit_Framework_ExpectationFailedException $exception) {
+        } catch (ExpectationFailedException $exception) {
             self::assertContains('- Property: foo, Contraint: type, Message: String value found, but an integer is required', $exception->getMessage());
             self::assertContains('- Response: {"foo":"123"}', $exception->getMessage());
         }
 
-        self::assertInstanceOf('PHPUnit_Framework_ExpectationFailedException', $exception);
+        self::assertInstanceOf('\PHPUnit\Framework\ExpectationFailedException', $exception);
     }
 
     /**
@@ -69,7 +72,7 @@ class AssertTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedException \PHPUnit\Framework\ExpectationFailedException
      */
     public function testAssertJsonMatchesSchemaWithRefsFails()
     {
@@ -110,7 +113,7 @@ class AssertTraitTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \PHPUnit_Framework_ExpectationFailedException
+     * @expectedException \PHPUnit\Framework\ExpectationFailedException
      */
     public function testAssertJsonValueEqualsFailsOnWrongDataType()
     {

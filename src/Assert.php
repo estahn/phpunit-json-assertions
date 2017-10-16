@@ -51,7 +51,7 @@ trait Assert
         }, $validator->getErrors());
         $messages[] = '- Response: '.json_encode($content);
 
-        \PHPUnit_Framework_Assert::assertTrue($validator->isValid(), implode("\n", $messages));
+        \PHPUnit\Framework\Assert::assertTrue($validator->isValid(), implode("\n", $messages));
     }
 
     /**
@@ -84,8 +84,8 @@ trait Assert
     {
         $result = \JmesPath\Env::search($expression, $json);
 
-        \PHPUnit_Framework_Assert::assertEquals($expected, $result);
-        \PHPUnit_Framework_Assert::assertInternalType(gettype($expected), $result);
+        \PHPUnit\Framework\Assert::assertEquals($expected, $result);
+        \PHPUnit\Framework\Assert::assertInternalType(gettype($expected), $result);
     }
 
     /**

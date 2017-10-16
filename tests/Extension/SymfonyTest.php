@@ -13,9 +13,10 @@ namespace EnricoStahn\JsonAssert\Tests\Extension;
 
 use EnricoStahn\JsonAssert\Extension\Symfony;
 use EnricoStahn\JsonAssert\Tests\Utils;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
-class SymfonyTest extends \PHPUnit_Framework_TestCase
+class SymfonyTest extends TestCase
 {
     public function testAssertJsonMatchesSchema()
     {

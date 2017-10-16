@@ -11,7 +11,9 @@
 
 namespace EnricoStahn\JsonAssert\Extension;
 
-class SymfonyClass extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class SymfonyClass extends TestCase
 {
     use Symfony;
 }

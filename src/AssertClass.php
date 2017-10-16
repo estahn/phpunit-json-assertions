@@ -11,7 +11,9 @@
 
 namespace EnricoStahn\JsonAssert;
 
-class AssertClass extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class AssertClass extends TestCase
 {
     use Assert;
 }

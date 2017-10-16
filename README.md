@@ -57,8 +57,9 @@ You can either use the `trait` or `class` version.
 namespace EnricoStahn\JsonAssert\Tests;
 
 use EnricoStahn\JsonAssert\Assert as JsonAssert;
+use PHPUnit\Framework\TestCase;
 
-class MyTestCase extends \PHPUnit_Framework_TestCase
+class MyTestCase extends TestCase
 {
     use JsonAssert;
     
@@ -86,7 +87,7 @@ class MyTestCase extends \PHPUnit_Framework_TestCase
 
 ### Class
 
-In case you don't want to use the `trait` you can use the provided class wich extends from `\PHPUnit_Framework_TestCase`.
+In case you don't want to use the `trait` you can use the provided class wich extends from `PHPUnit\Framework\TestCase`.
 You can either extend your test case or use the static methods like below.
 
 ```php
@@ -95,8 +96,9 @@ You can either extend your test case or use the static methods like below.
 namespace EnricoStahn\JsonAssert\Tests;
 
 use EnricoStahn\JsonAssert\AssertClass as JsonAssert;
+use PHPUnit\Framework\TestCase;
 
-class MyTestCase extends \PHPUnit_Framework_TestCase
+class MyTestCase extends TestCase
 {
     public function testJsonDocumentIsValid()
     {

@@ -12,8 +12,9 @@
 namespace EnricoStahn\JsonAssert\Tests;
 
 use EnricoStahn\JsonAssert\AssertClass;
+use PHPUnit\Framework\TestCase;
 
-class AssertClassTest extends \PHPUnit_Framework_TestCase
+class AssertClassTest extends TestCase
 {
     public function testClassInstance()
     {
