@@ -3,14 +3,8 @@ sudo: false
 language: php
 
 php:
-  - 7
-
-matrix:
-    include:
-        - php: 7
-          env: 'COMPOSER_FLAGS="--prefer-stable --prefer-lowest"'
-    allow_failures:
-        - php: hhvm
+  - 7.1
+  - 7.2
 
 before_script:
     - travis_retry composer self-update
