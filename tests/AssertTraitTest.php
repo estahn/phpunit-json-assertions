@@ -123,14 +123,14 @@ class AssertTraitTest extends TestCase
     }
 
     /**
-     * @dataProvider testGetJsonObjectProvider
+     * @dataProvider jsonObjectProvider
      */
     public function testGetJsonObject($expected, $actual)
     {
         self::assertEquals($expected, AssertTraitImpl::getJsonObject($actual));
     }
 
-    public function testGetJsonObjectProvider()
+    public function jsonObjectProvider()
     {
         return [
             [[], []],
