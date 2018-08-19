@@ -85,7 +85,7 @@ trait Assert
         $result = \JmesPath\Env::search($expression, $json);
 
         \PHPUnit\Framework\Assert::assertEquals($expected, $result);
-        \PHPUnit\Framework\Assert::assertInternalType(gettype($expected), $result);
+        \PHPUnit\Framework\Assert::assertInternalType(strtolower(gettype($expected)), $result);
     }
 
     /**
