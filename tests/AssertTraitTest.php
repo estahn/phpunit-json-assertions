@@ -25,14 +25,14 @@ class AssertTraitTest extends TestCase
     {
         $content = json_decode(file_get_contents(Utils::getJsonPath('assertJsonMatchesSchema_simple.json')));
 
-        AssertTraitImpl::assertJsonMatchesSchema(Utils::getSchemaPath('assertJsonMatchesSchema_simple.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('assertJsonMatchesSchema_simple.schema.json'), $content);
     }
 
     public function testAssertJsonMatchesSchema()
     {
         $content = json_decode('{"foo":123}');
 
-        AssertTraitImpl::assertJsonMatchesSchema(Utils::getSchemaPath('test.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('test.schema.json'), $content);
     }
 
     /**
@@ -42,7 +42,7 @@ class AssertTraitTest extends TestCase
     {
         $content = json_decode('{"foo":"123"}');
 
-        AssertTraitImpl::assertJsonMatchesSchema(Utils::getSchemaPath('test.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('test.schema.json'), $content);
     }
 
     public function testAssertJsonMatchesSchemaFailMessage()
@@ -52,7 +52,7 @@ class AssertTraitTest extends TestCase
         $exception = null;
 
         try {
-            AssertTraitImpl::assertJsonMatchesSchema(Utils::getSchemaPath('test.schema.json'), $content);
+            AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('test.schema.json'), $content);
         } catch (ExpectationFailedException $exception) {
             self::assertContains('- Property: foo, Contraint: type, Message: String value found, but an integer is required', $exception->getMessage());
             self::assertContains('- Response: {"foo":"123"}', $exception->getMessage());
@@ -68,7 +68,7 @@ class AssertTraitTest extends TestCase
     {
         $content = json_decode('{"code":123, "message":"Nothing works."}');
 
-        AssertTraitImpl::assertJsonMatchesSchema(Utils::getSchemaPath('error.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('error.schema.json'), $content);
     }
 
     /**
@@ -78,7 +78,7 @@ class AssertTraitTest extends TestCase
     {
         $content = json_decode('{"code":"123", "message":"Nothing works."}');
 
-        AssertTraitImpl::assertJsonMatchesSchema(Utils::getSchemaPath('error.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('error.schema.json'), $content);
     }
 
     public function testAssertJsonMatchesSchemaString()
@@ -102,6 +102,17 @@ class AssertTraitTest extends TestCase
         $content = json_decode(file_get_contents(Utils::getJsonPath('testAssertJsonValueEquals.json')));
 
         AssertTraitImpl::assertJsonValueEquals($value, $expression, $content);
+    }
+
+    public function testAssertWithSchemaStore()
+    {
+        $obj = new AssertTraitImpl();
+        $obj->setUp();
+
+        $schemastore = $obj->testWithSchemaStore('foobar', (object)['type' => 'string']);
+
+        self::assertInstanceOf('JsonSchema\SchemaStorage', $schemastore);
+        self::assertEquals($schemastore->getSchema('foobar'), (object)['type' => 'string']);
     }
 
     public function assertJsonValueEqualsProvider()

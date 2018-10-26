@@ -11,10 +11,10 @@
 
 namespace EnricoStahn\JsonAssert;
 
-use JsonSchema\RefResolver;
-use JsonSchema\Uri\UriResolver;
-use JsonSchema\Uri\UriRetriever;
+use JsonSchema\Constraints\Factory;
+use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 /**
  * Asserts to validate JSON data.
@@ -26,24 +26,39 @@ use JsonSchema\Validator;
 trait Assert
 {
     /**
+     * @var SchemaStorage
+     */
+    private static $schemaStorage = null;
+
+    /**
      * Asserts that json content is valid according to the provided schema file.
      *
      * Example:
      *
-     *   static::assertJsonMatchesSchema('./schema.json', json_decode('{"foo":1}'))
+     *   static::assertJsonMatchesSchema(json_decode('{"foo":1}'), './schema.json')
      *
-     * @param string       $schema  Path to the schema file
+     * @param string|null  $schema  Path to the schema file
      * @param array|object $content JSON array or object
      */
-    public static function assertJsonMatchesSchema($schema, $content)
+    public static function assertJsonMatchesSchema($content, $schema = null)
     {
-        // Assume references are relative to the current file
-        // Create an issue or pull request if you need more complex use cases
-        $refResolver = new RefResolver(new UriRetriever(), new UriResolver());
-        $schemaObj = $refResolver->resolve('file://'.realpath($schema));
+        if (self::$schemaStorage === null) {
+            self::$schemaStorage = new SchemaStorage();
+        }
 
-        $validator = new Validator();
-        $validator->check($content, $schemaObj);
+        if ($schema !== null && !file_exists($schema)) {
+            throw new FileNotFoundException($schema);
+        }
+
+        $schemaObject = null;
+
+        if ($schema !== null) {
+            $schemaObject = json_decode(file_get_contents($schema));
+            self::$schemaStorage->addSchema( 'file://' . $schema, $schemaObject);
+        }
+
+        $validator = new Validator(new Factory(self::$schemaStorage));
+        $validator->validate($content, $schemaObject);
 
         $message = '- Property: %s, Contraint: %s, Message: %s';
         $messages = array_map(function ($exception) use ($message) {
@@ -52,6 +67,22 @@ trait Assert
         $messages[] = '- Response: '.json_encode($content);
 
         \PHPUnit\Framework\Assert::assertTrue($validator->isValid(), implode("\n", $messages));
+    }
+
+    /**
+     * Asserts that json content is valid according to the provided schema file.
+     *
+     * Example:
+     *
+     *   static::assertJsonMatchesSchema(json_decode('{"foo":1}'), './schema.json')
+     *
+     * @param string|null  $schema  Path to the schema file
+     * @param array|object $content JSON array or object
+     * @deprecated This will be removed in the next major version (4.x).
+     */
+    public static function assertJsonMatchesSchemaDepr($schema, $content)
+    {
+        self::assertJsonMatchesSchema($content, $schema);
     }
 
     /**
@@ -65,7 +96,7 @@ trait Assert
         $file = tempnam(sys_get_temp_dir(), 'json-schema-');
         file_put_contents($file, $schema);
 
-        self::assertJsonMatchesSchema($file, $content);
+        self::assertJsonMatchesSchema($content, $file);
     }
 
     /**

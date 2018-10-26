@@ -79,7 +79,7 @@ class MyTestCase extends \PHPUnit_Framework_TestCase
 
         $json = json_decode('{"foo":1}');
 
-        $this->assertJsonMatchesSchema('./my-schema.json', $json);
+        $this->assertJsonMatchesSchema($json, './my-schema.json');
         $this->assertJsonValueEquals(1, '* | [0]', $json);
     }
 }
@@ -115,7 +115,63 @@ class MyTestCase extends \PHPUnit_Framework_TestCase
 
         $json = json_decode('{"foo":1}');
 
-        JsonAssert::assertJsonMatchesSchema('./my-schema.json', $json);
+        JsonAssert::assertJsonMatchesSchema($json, './my-schema.json');
+        JsonAssert::assertJsonValueEquals(1, '* | [0]', $json);
+    }
+}
+```
+
+## Schema storage
+
+The [schema storage](https://github.com/justinrainbow/json-schema/blob/master/src/JsonSchema/SchemaStorage.php) of `justinrainbow/json-schema` allows to register schemas which will effectively override the actual schema location.
+
+Example:
+```json
+{"$ref" : "https://iglu.foobar.com/myschema.json#/definitions/positiveInteger"}
+```
+
+The resolver will fetch the schema from this endpoint and match the JSON document against it. Using schema storage you're able to override this behaviour.
+
+```php
+$schemastorage->addSchema('https://iglu.foobar.com/myschema.json', (object)['type' => 'string']);
+```
+
+With this in place the resolver will take the schema that is already in place without downloading it again.
+
+```php
+<?php
+
+namespace EnricoStahn\JsonAssert\Tests;
+
+use EnricoStahn\JsonAssert\AssertClass as JsonAssert;
+
+class MyTestCase extends \PHPUnit_Framework_TestCase
+{
+    public function setUp()
+    {
+        self::$schemaStorage = new SchemaStorage();
+        
+        self::$schemaStorage->addSchema('<id>', obj);
+        ...
+    }
+    
+    public function testJsonDocumentIsValid()
+    {
+        // my-schema.json
+        //
+        // {
+        //   "type" : "object",
+        //   "properties" : {
+        //     "foo" : {
+        //       "type" : "integer"
+        //     }
+        //   },
+        //   "required" : [ "foo" ]
+        // }
+
+        $json = json_decode('{"foo":1}');
+
+        JsonAssert::assertJsonMatchesSchema($json, './my-schema.json');
         JsonAssert::assertJsonValueEquals(1, '* | [0]', $json);
     }
 }

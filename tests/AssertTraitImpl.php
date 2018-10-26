@@ -12,9 +12,27 @@
 namespace EnricoStahn\JsonAssert\Tests;
 
 use EnricoStahn\JsonAssert\Assert as JsonAssert;
+use JsonSchema\SchemaStorage;
 use PHPUnit\Framework\TestCase;
 
 class AssertTraitImpl extends TestCase
 {
     use JsonAssert;
+
+    public function setUp()
+    {
+        self::$schemaStorage = new SchemaStorage();
+    }
+
+    /**
+     * @param string $id
+     * @param string $schema
+     * @return SchemaStorage
+     */
+    public function testWithSchemaStore($id, $schema)
+    {
+        self::$schemaStorage->addSchema($id, $schema);
+
+        return self::$schemaStorage;
+    }
 }

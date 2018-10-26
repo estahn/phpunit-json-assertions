@@ -14,7 +14,7 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.0",
-        "justinrainbow/json-schema": "^2.0",
+        "justinrainbow/json-schema": "^5.0",
         "mtdowling/jmespath.php": "^2.3"
     },
     "require-dev": {

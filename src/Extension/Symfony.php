@@ -28,7 +28,7 @@ trait Symfony
      */
     public static function assertJsonMatchesSchema($schema, Response $response)
     {
-        Assert::assertJsonMatchesSchema($schema, json_decode($response->getContent()));
+        Assert::assertJsonMatchesSchemaDepr($schema, json_decode($response->getContent()));
     }
 
     /**
