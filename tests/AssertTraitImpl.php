@@ -27,6 +27,7 @@ class AssertTraitImpl extends TestCase
     /**
      * @param string $id
      * @param string $schema
+     *
      * @return SchemaStorage
      */
     public function testWithSchemaStore($id, $schema)

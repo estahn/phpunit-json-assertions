@@ -54,7 +54,7 @@ trait Assert
 
         if ($schema !== null) {
             $schemaObject = json_decode(file_get_contents($schema));
-            self::$schemaStorage->addSchema( 'file://' . $schema, $schemaObject);
+            self::$schemaStorage->addSchema('file://'.$schema, $schemaObject);
         }
 
         $validator = new Validator(new Factory(self::$schemaStorage));
@@ -78,6 +78,7 @@ trait Assert
      *
      * @param string|null  $schema  Path to the schema file
      * @param array|object $content JSON array or object
+     *
      * @deprecated This will be removed in the next major version (4.x).
      */
     public static function assertJsonMatchesSchemaDepr($schema, $content)
