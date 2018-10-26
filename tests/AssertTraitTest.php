@@ -109,10 +109,10 @@ class AssertTraitTest extends TestCase
         $obj = new AssertTraitImpl();
         $obj->setUp();
 
-        $schemastore = $obj->testWithSchemaStore('foobar', (object)['type' => 'string']);
+        $schemastore = $obj->testWithSchemaStore('foobar', (object) ['type' => 'string']);
 
         self::assertInstanceOf('JsonSchema\SchemaStorage', $schemastore);
-        self::assertEquals($schemastore->getSchema('foobar'), (object)['type' => 'string']);
+        self::assertEquals($schemastore->getSchema('foobar'), (object) ['type' => 'string']);
     }
 
     public function assertJsonValueEqualsProvider()
