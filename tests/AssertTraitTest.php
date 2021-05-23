@@ -44,7 +44,8 @@ class AssertTraitTest extends TestCase
         AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('test.schema.json'));
     }
 
-    public function testAssertThrowsFileNotFoundException() {
+    public function testAssertThrowsFileNotFoundException()
+    {
         $this->expectException(FileNotFoundException::class);
         $content = json_decode('{"foo":"123"}');
 
