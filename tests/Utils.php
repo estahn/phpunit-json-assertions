@@ -20,7 +20,7 @@ class Utils
      *
      * @return string
      */
-    public static function getSchemaPath($filename)
+    public static function getSchemaPath(string $filename): string
     {
         return implode(DIRECTORY_SEPARATOR, [__DIR__, 'schemas', $filename]);
     }
@@ -32,7 +32,7 @@ class Utils
      *
      * @return string
      */
-    public static function getJsonPath($filename)
+    public static function getJsonPath(string $filename): string
     {
         return implode(DIRECTORY_SEPARATOR, [__DIR__, 'json', $filename]);
     }

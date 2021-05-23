@@ -11,6 +11,7 @@
 
 namespace EnricoStahn\JsonAssert;
 
+use JmesPath\Env;
 use JsonSchema\Constraints\Factory;
 use JsonSchema\SchemaStorage;
 use JsonSchema\Validator;
@@ -26,9 +27,9 @@ use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 trait Assert
 {
     /**
-     * @var SchemaStorage
+     * @var ?SchemaStorage
      */
-    private static $schemaStorage = null;
+    private static ?SchemaStorage $schemaStorage = null;
 
     /**
      * Asserts that json content is valid according to the provided schema file.
@@ -37,10 +38,10 @@ trait Assert
      *
      *   static::assertJsonMatchesSchema(json_decode('{"foo":1}'), './schema.json')
      *
-     * @param string|null  $schema  Path to the schema file
      * @param array|object $content JSON array or object
+     * @param ?string      $schema  Path to the schema file
      */
-    public static function assertJsonMatchesSchema($content, $schema = null)
+    public static function assertJsonMatchesSchema($content, ?string $schema = null): void
     {
         if (self::$schemaStorage === null) {
             self::$schemaStorage = new SchemaStorage();
@@ -60,7 +61,7 @@ trait Assert
         $validator = new Validator(new Factory(self::$schemaStorage));
         $validator->validate($content, $schemaObject);
 
-        $message = '- Property: %s, Contraint: %s, Message: %s';
+        $message = '- Property: %s, Constraint: %s, Message: %s';
         $messages = array_map(function ($exception) use ($message) {
             return sprintf($message, $exception['property'], $exception['constraint'], $exception['message']);
         }, $validator->getErrors());
@@ -70,29 +71,12 @@ trait Assert
     }
 
     /**
-     * Asserts that json content is valid according to the provided schema file.
-     *
-     * Example:
-     *
-     *   static::assertJsonMatchesSchema(json_decode('{"foo":1}'), './schema.json')
-     *
-     * @param string|null  $schema  Path to the schema file
-     * @param array|object $content JSON array or object
-     *
-     * @deprecated This will be removed in the next major version (4.x).
-     */
-    public static function assertJsonMatchesSchemaDepr($schema, $content)
-    {
-        self::assertJsonMatchesSchema($content, $schema);
-    }
-
-    /**
      * Asserts that json content is valid according to the provided schema string.
      *
      * @param string       $schema  Schema data
      * @param array|object $content JSON content
      */
-    public static function assertJsonMatchesSchemaString($schema, $content)
+    public static function assertJsonMatchesSchemaString(string $schema, $content): void
     {
         $file = tempnam(sys_get_temp_dir(), 'json-schema-');
         file_put_contents($file, $schema);
@@ -107,17 +91,17 @@ trait Assert
      *
      *     static::assertJsonValueEquals(33, 'foo.bar[0]', $json);
      *
-     * @param mixed        $expected   Expected value
-     * @param string       $expression Expression to retrieve the result
-     *                                 (e.g. locations[?state == 'WA'].name | sort(@))
-     * @param array|object $json       JSON Content
+     * @param mixed               $expected   Expected value
+     * @param string              $expression Expression to retrieve the result
+     *                                        (e.g. locations[?state == 'WA'].name | sort(@))
+     * @param array|object|string $json       JSON Content
      */
-    public static function assertJsonValueEquals($expected, $expression, $json)
+    public static function assertJsonValueEquals($expected, string $expression, $json): void
     {
-        $result = \JmesPath\Env::search($expression, $json);
+        $result = Env::search($expression, $json);
 
         \PHPUnit\Framework\Assert::assertEquals($expected, $result);
-        \PHPUnit\Framework\Assert::assertInternalType(strtolower(gettype($expected)), $result);
+        \PHPUnit\Framework\Assert::assertEquals(gettype($expected), gettype($result));
     }
 
     /**

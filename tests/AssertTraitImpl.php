@@ -19,18 +19,18 @@ class AssertTraitImpl extends TestCase
 {
     use JsonAssert;
 
-    public function setUp()
+    public function setUp(): void
     {
         self::$schemaStorage = new SchemaStorage();
     }
 
     /**
-     * @param string $id
-     * @param string $schema
+     * @param string       $id
+     * @param array|object $schema
      *
      * @return SchemaStorage
      */
-    public function testWithSchemaStore($id, $schema)
+    public function testWithSchemaStore(string $id, $schema): SchemaStorage
     {
         self::$schemaStorage->addSchema($id, $schema);
 
