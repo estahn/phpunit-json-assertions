@@ -53,18 +53,18 @@ jobs:
         php:
         - 7.1
         - 7.2
-        - 7.3
-        - 7.4
+        # - 7.3
+        # - 7.4
         # - 8.0
         include:
           - php: 7.1
             phpunit: 7.5.20
           - php: 7.2
             phpunit: 8.5.13
-          - php: 7.3
-            phpunit: 9.5.0
-          - php: 7.4
-            phpunit: 9.5.0
+          # - php: 7.3
+          #   phpunit: 9.5.0
+          # - php: 7.4
+          #   phpunit: 9.5.0
           # - php: 8.0
           #   phpunit: 9.5.0
 
