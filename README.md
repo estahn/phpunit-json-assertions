@@ -2,8 +2,7 @@
 
 [![Latest Stable Version](https://poser.pugx.org/estahn/phpunit-json-assertions/version.png)](https://packagist.org/packages/estahn/phpunit-json-assertions)
 [![Total Downloads](https://poser.pugx.org/estahn/phpunit-json-assertions/d/total.png)](https://packagist.org/packages/estahn/phpunit-json-assertions)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/581c093b-833a-49c2-a05c-d99aaf8f39c2/mini.png)](https://insight.sensiolabs.com/projects/581c093b-833a-49c2-a05c-d99aaf8f39c2)
-[![CircleCI](https://circleci.com/gh/estahn/phpunit-json-assertions.svg?style=svg)](https://circleci.com/gh/estahn/phpunit-json-assertions)
+[![Test](https://github.com/estahn/phpunit-json-assertions/actions/workflows/build.yml/badge.svg)](https://github.com/estahn/phpunit-json-assertions/actions/workflows/build.yml)
 [![StyleCI](https://styleci.io/repos/53177096/shield)](https://styleci.io/repos/53177096)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/estahn/phpunit-json-assertions.svg)](http://isitmaintained.com/project/estahn/phpunit-json-assertions "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/estahn/phpunit-json-assertions.svg)](http://isitmaintained.com/project/estahn/phpunit-json-assertions "Percentage of issues still open")
@@ -226,3 +225,8 @@ To run the test suite, you need [composer](http://getcomposer.org).
 ## License
 
 The phpunit-json-assertions library is licensed under the [MIT](LICENSE).
+
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/estahn/phpunit-json-assertions.svg)](https://starchart.cc/estahn/phpunit-json-assertions)
