@@ -1,0 +1,27 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      dryrun:
+        description: "DryRun"
+        required: false
+        default: 'true'
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: git/unshallow
+      run: git fetch --prune --unshallow
+
+    - uses: cycjimmy/semantic-release-action@v2
+      with:
+        dry_run: ${{ github.event.inputs.dryrun }}
+        extra_plugins: |
+          @semantic-release/changelog
+          @semantic-release/git
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
