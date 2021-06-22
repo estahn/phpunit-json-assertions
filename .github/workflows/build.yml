@@ -72,7 +72,7 @@ jobs:
         with:
           php_version: ${{ matrix.php }}
 
-      - uses: php-actions/phpunit@v2
+      - uses: php-actions/phpunit@v9
         with:
           php_version: ${{ matrix.php }}
           version: ${{ matrix.phpunit }}
