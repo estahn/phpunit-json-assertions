@@ -1,27 +1,22 @@
 name: Release
-on:
-  workflow_dispatch:
-    inputs:
-      dryrun:
-        description: "DryRun"
-        required: false
-        default: 'true'
+on: [workflow_dispatch]
 jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+#     if: github.ref == 'refs/heads/master'
     steps:
 
-    - uses: actions/checkout@v2
+    - name: Setup Node.js for use with actions
+      uses: actions/setup-node@v2.1.5
 
-    - name: git/unshallow
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Unshallow
       run: git fetch --prune --unshallow
 
-    - uses: cycjimmy/semantic-release-action@v2
-      with:
-        dry_run: ${{ github.event.inputs.dryrun }}
-        extra_plugins: |
-          @semantic-release/changelog
-          @semantic-release/git
+    - name: Run semantic-release
+      run: npx -p @semantic-release/changelog -p semantic-release@17.3.0 -p @semantic-release/git semantic-release
       env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
