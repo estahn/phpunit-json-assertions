@@ -26,9 +26,9 @@ trait Symfony
      * @param string   $schema   Path to the schema file
      * @param Response $response JSON array or object
      */
-    public static function assertJsonMatchesSchema($schema, Response $response)
+    public static function assertJsonMatchesSchema(string $schema, Response $response): void
     {
-        Assert::assertJsonMatchesSchemaDepr($schema, json_decode($response->getContent()));
+        Assert::assertJsonMatchesSchema(json_decode($response->getContent()), $schema);
     }
 
     /**
@@ -37,7 +37,7 @@ trait Symfony
      * @param string   $schema   Schema data
      * @param Response $response JSON content
      */
-    public static function assertJsonMatchesSchemaString($schema, Response $response)
+    public static function assertJsonMatchesSchemaString(string $schema, Response $response): void
     {
         Assert::assertJsonMatchesSchemaString($schema, json_decode($response->getContent()));
     }
@@ -54,7 +54,7 @@ trait Symfony
      *                             (e.g. locations[?state == 'WA'].name | sort(@))
      * @param Response $response   JSON Content
      */
-    public static function assertJsonValueEquals($expected, $expression, $response)
+    public static function assertJsonValueEquals($expected, string $expression, Response $response): void
     {
         Assert::assertJsonValueEquals($expected, $expression, json_decode($response->getContent()));
     }
@@ -67,7 +67,7 @@ trait Symfony
      *
      * @see \Bazinga\Bundle\RestExtraBundle\Test\WebTestCase::assertJsonResponse()
      */
-    public static function assertJsonResponse(Response $response, $statusCode = 200)
+    public static function assertJsonResponse(Response $response, int $statusCode = 200): void
     {
         \PHPUnit\Framework\Assert::assertEquals(
             $statusCode,

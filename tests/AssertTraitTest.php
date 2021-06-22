@@ -13,6 +13,7 @@ namespace EnricoStahn\JsonAssert\Tests;
 
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
 
 class AssertTraitTest extends TestCase
 {
@@ -25,24 +26,30 @@ class AssertTraitTest extends TestCase
     {
         $content = json_decode(file_get_contents(Utils::getJsonPath('assertJsonMatchesSchema_simple.json')));
 
-        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('assertJsonMatchesSchema_simple.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('assertJsonMatchesSchema_simple.schema.json'));
     }
 
     public function testAssertJsonMatchesSchema()
     {
         $content = json_decode('{"foo":123}');
 
-        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('test.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('test.schema.json'));
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\ExpectationFailedException
-     */
     public function testAssertJsonMatchesSchemaFail()
     {
+        $this->expectException(ExpectationFailedException::class);
         $content = json_decode('{"foo":"123"}');
 
-        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('test.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('test.schema.json'));
+    }
+
+    public function testAssertThrowsFileNotFoundException()
+    {
+        $this->expectException(FileNotFoundException::class);
+        $content = json_decode('{"foo":"123"}');
+
+        AssertTraitImpl::assertJsonMatchesSchema($content, 'not-found.json');
     }
 
     public function testAssertJsonMatchesSchemaFailMessage()
@@ -52,10 +59,10 @@ class AssertTraitTest extends TestCase
         $exception = null;
 
         try {
-            AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('test.schema.json'), $content);
+            AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('test.schema.json'));
         } catch (ExpectationFailedException $exception) {
-            self::assertContains('- Property: foo, Contraint: type, Message: String value found, but an integer is required', $exception->getMessage());
-            self::assertContains('- Response: {"foo":"123"}', $exception->getMessage());
+            self::assertStringContainsString('- Property: foo, Constraint: type, Message: String value found, but an integer is required', $exception->getMessage());
+            self::assertStringContainsString('- Response: {"foo":"123"}', $exception->getMessage());
         }
 
         self::assertInstanceOf('\PHPUnit\Framework\ExpectationFailedException', $exception);
@@ -68,17 +75,15 @@ class AssertTraitTest extends TestCase
     {
         $content = json_decode('{"code":123, "message":"Nothing works."}');
 
-        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('error.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('error.schema.json'));
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\ExpectationFailedException
-     */
     public function testAssertJsonMatchesSchemaWithRefsFails()
     {
+        $this->expectException(ExpectationFailedException::class);
         $content = json_decode('{"code":"123", "message":"Nothing works."}');
 
-        AssertTraitImpl::assertJsonMatchesSchemaDepr(Utils::getSchemaPath('error.schema.json'), $content);
+        AssertTraitImpl::assertJsonMatchesSchema($content, Utils::getSchemaPath('error.schema.json'));
     }
 
     public function testAssertJsonMatchesSchemaString()
@@ -97,7 +102,7 @@ class AssertTraitTest extends TestCase
      * @param string $expression
      * @param mixed  $value
      */
-    public function testAssertJsonValueEquals($expression, $value)
+    public function testAssertJsonValueEquals(string $expression, $value)
     {
         $content = json_decode(file_get_contents(Utils::getJsonPath('testAssertJsonValueEquals.json')));
 
@@ -109,13 +114,13 @@ class AssertTraitTest extends TestCase
         $obj = new AssertTraitImpl();
         $obj->setUp();
 
-        $schemastore = $obj->testWithSchemaStore('foobar', (object) ['type' => 'string']);
+        $schemaStore = $obj->testWithSchemaStore('foobar', (object) ['type' => 'string']);
 
-        self::assertInstanceOf('JsonSchema\SchemaStorage', $schemastore);
-        self::assertEquals($schemastore->getSchema('foobar'), (object) ['type' => 'string']);
+        self::assertInstanceOf('JsonSchema\SchemaStorage', $schemaStore);
+        self::assertEquals($schemaStore->getSchema('foobar'), (object) ['type' => 'string']);
     }
 
-    public function assertJsonValueEqualsProvider()
+    public function assertJsonValueEqualsProvider(): array
     {
         return [
             ['foo', '123'],
@@ -123,14 +128,12 @@ class AssertTraitTest extends TestCase
         ];
     }
 
-    /**
-     * @expectedException \PHPUnit\Framework\ExpectationFailedException
-     */
     public function testAssertJsonValueEqualsFailsOnWrongDataType()
     {
+        $this->expectException(ExpectationFailedException::class);
         $content = json_decode(file_get_contents(Utils::getJsonPath('testAssertJsonValueEquals.json')));
 
-        AssertTraitImpl::assertJsonValueEquals($content, 'a.b.c[0].d[1][0]', '1');
+        AssertTraitImpl::assertJsonValueEquals($content, 'a.b.c[0].d[1][0]', '{}');
     }
 
     /**
@@ -141,7 +144,7 @@ class AssertTraitTest extends TestCase
         self::assertEquals($expected, AssertTraitImpl::getJsonObject($actual));
     }
 
-    public function jsonObjectProvider()
+    public function jsonObjectProvider(): array
     {
         return [
             [[], []],
